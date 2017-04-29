@@ -57,8 +57,10 @@ resource "digitalocean_droplet" "dockerserver" {
       "wget https://releases.hashicorp.com/consul/0.8.1/consul_0.8.1_linux_amd64.zip -O files/consul.zip",
       "cd /usr/local/bin",
       "unzip /root/files/packer.zip",
-      "chmod +x packer",
+      "unzip /root/files/consul.zip",
+      "chmod +x packer consul",
       "packer build /root/files/json/centos.json",
+      "packer build /root/files/json/nginx.json",
     ]
   }
 

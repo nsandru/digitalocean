@@ -1,0 +1,34 @@
+{
+  "builders": [{
+    "type": "docker",
+    "pull": false,
+    "image": "centos7ansible:1.0",
+    "commit": true,
+    "changes": [
+      "WORKDIR /var/www",
+      "EXPOSE 80 443",
+      "ENTRYPOINT [\"nginx\", \"-g\", \"daemon off;\"]"
+    ]
+  }],
+  "provisioners": [
+    {
+      "source": "/usr/local/bin/consul",
+      "destination": "/usr/bin/consul",
+      "type": "file"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chmod +x /usr/bin/consul"
+      ]
+    }
+  ],
+  "post-processors": [
+    [{
+      "type": "docker-tag",
+      "repository": "centos7nginx",
+      "tag": "1.0"
+    }]
+  ]
+}
+
