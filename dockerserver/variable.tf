@@ -90,3 +90,8 @@ variable "domain" {
 variable "sshkeys" {
   description = "SSH keys list"
 }
+
+variable "createdomain" {
+  description = "Set to 1 for creating a domain"
+  default = 0
+}

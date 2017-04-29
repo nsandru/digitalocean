@@ -5,4 +5,3 @@ output "Public IP" {
 output " Name" {
   value = ["${digitalocean_droplet.dockerserver.*.name}"]
 }
-

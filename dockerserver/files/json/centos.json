@@ -1,0 +1,24 @@
+{
+  "builders": [{
+    "type": "docker",
+    "image": "centos:7",
+    "commit": true
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+         "yum -y install epel-release",
+         "yum -y install ansible"
+      ]
+    }
+  ],
+  "post-processors": [
+    [{
+      "type": "docker-tag",
+      "repository": "centos7ansible",
+      "tag": "1.0"
+    }]
+  ]
+}
+
