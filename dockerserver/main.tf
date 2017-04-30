@@ -13,7 +13,7 @@
 #   TF_VAR_instances    = Number of droplets (default 1)
 #   TF_VAR_createdomain = Set to 1 if the domain has to be created
 #
-# Nick Sandru 20170429
+# Nick Sandru 20170430
 
 provider "digitalocean" {}
 
@@ -41,7 +41,7 @@ resource "digitalocean_droplet" "dockerserver" {
   }
 
   provisioner "local-exec" {
-    command = "tar zcf files/digitalocean.tar.gz files/json"
+    command = "tar zcf files/digitalocean.tar.gz files/json ansible"
   }
 
   provisioner "file" {

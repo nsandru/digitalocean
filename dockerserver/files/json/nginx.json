@@ -7,10 +7,20 @@
     "changes": [
       "WORKDIR /var/www",
       "EXPOSE 80 443",
-      "ENTRYPOINT [\"nginx\", \"-g\", \"daemon off;\"]"
+      "ENTRYPOINT [\"/usr/sbin/nginx\", \"-g\", \"daemon off;\"]"
     ]
   }],
   "provisioners": [
+    {
+      "source": "/root/ansible/index.html.j2",
+      "destination": "/tmp/index.html.j2",
+      "type": "file"
+    },
+    {
+      "source": "/root/ansible/default.conf.j2",
+      "destination": "/tmp/default.conf.j2",
+      "type": "file"
+    },
     {
       "source": "/usr/local/bin/consul",
       "destination": "/usr/bin/consul",
@@ -21,6 +31,11 @@
       "inline": [
         "chmod +x /usr/bin/consul"
       ]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "/root/ansible/nginx.yml",
+      "inventory_file": "/root/ansible/inventory"
     }
   ],
   "post-processors": [
