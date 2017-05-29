@@ -1,0 +1,11 @@
+- hosts: localhost
+
+  tasks:
+  - lineinfile:
+      dest: /export/home/ns/.ssh/known_hosts
+      state: absent
+      regexp: "{{ item.regex }}"
+    with_items:
+      - regex: '^gateway\d\.'
+      - regex: '^dockerserver\d\.'
+

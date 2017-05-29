@@ -1,0 +1,40 @@
+{
+  "builders": [{
+    "type": "docker",
+    "pull": false,
+    "image": "debian7apache2:1.0",
+    "commit": true,
+    "changes": [
+      "EXPOSE 80 443",
+      "ENTRYPOINT [\"/usr/sbin/runsvdir-start\"]"
+    ]
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get update -q -q",
+        "apt-get install -y rblcheck"
+      ]
+    },
+    {
+      "source": "/usr/local/bin/consul",
+      "destination": "/usr/bin/consul",
+      "type": "file"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chmod +x /usr/bin/consul"
+      ]
+    }
+  ],
+  "post-processors": [
+    [{
+      "type": "docker-tag",
+      "repository": "debian7apache2rblcheck",
+      "tag": "1.0"
+    }]
+  ]
+}
+

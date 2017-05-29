@@ -1,0 +1,8 @@
+- name: Add authorized_keys
+  copy:
+    src: files/authorized_keys
+    dest: /root/.ssh/authorized_keys
+    mode: 0644
+    owner: root
+    group: root
+

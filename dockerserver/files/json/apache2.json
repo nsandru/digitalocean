@@ -1,0 +1,40 @@
+{
+  "builders": [{
+    "type": "docker",
+    "pull": true,
+    "image": "debian:wheezy",
+    "commit": true,
+    "changes": [
+      "EXPOSE 80 443",
+      "ENTRYPOINT [\"/usr/sbin/runsvdir-start\"]"
+    ]
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get update -q -q",
+        "apt-get install -y runit apache2 php5 squirrelmail php5-mysql libdbd-mysql-perl graphicsmagick-imagemagick-compat libnet-dns-perl"
+      ]
+    },
+    {
+      "source": "/usr/local/bin/consul",
+      "destination": "/usr/bin/consul",
+      "type": "file"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chmod +x /usr/bin/consul"
+      ]
+    }
+  ],
+  "post-processors": [
+    [{
+      "type": "docker-tag",
+      "repository": "debian7apache2",
+      "tag": "1.0"
+    }]
+  ]
+}
+
