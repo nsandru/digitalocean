@@ -13,14 +13,15 @@ DOMAIN=`echo $REGDOMAIN | cut -f2- -d.`
 
 INTDOMAINS=`(cd ansible/var/named ; ls *.internal | sed 's/\.internal$//')`
 INTDOMAINS=`echo $INTDOMAINS | tr ' ' ','`
-test -f ansible/etc/named/0.external || {
-  (cat << EOF
-	allow-query { any; };
-EOF
-) > ansible/etc/named/0.external
-}
 EXTDOMAINS=`(cd ansible/var/named ; ls *.external | sed 's/\.external$//')`
 EXTDOMAINS=`echo $EXTDOMAINS | tr ' ' ','`
+
+test -f ansible/etc/0.external || {
+  (cat << EOF
+      allow-query { any; };
+EOF
+) > ansible/etc/0.external
+}
 
 test "x$INTDOMAINS" = x -o "x$EXTDOMAINS" = x && {
   echo $0: Populate ansible/var/named with at least one internal zone file and one external zone file
