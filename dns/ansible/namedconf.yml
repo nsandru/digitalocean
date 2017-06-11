@@ -1,0 +1,77 @@
+## Configure DNS server
+#
+# intdomain and extdomain are domains to be configured (mandatory)
+# intdomain - zone in the internal view
+# extdomain - zone in the external view
+#
+# namedconf.yml-20170610
+#
+
+- hosts: all
+
+  tasks:
+  - name: Create /etc/named.conf
+    template:
+        src: "etc/named.conf.j2"
+        dest: "/var/named/chroot/etc/named.conf"
+        owner: root
+        group: named
+        mode: 0640
+
+  - name: Create the include for internal zone files
+    template:
+        src: "etc/include.internal.j2"
+        dest: "/var/named/chroot/etc/named/{{ item }}.internal"
+        owner: root
+        group: named
+        mode: 0640
+    with_items: "{{ intdomain.split(',') }}"
+
+  - name: Create the include for external zone files
+    template:
+        src: "etc/include.external.j2"
+        dest: "/var/named/chroot/etc/named/{{ item }}.external"
+        owner: root
+        group: named
+        mode: 0640
+    with_items: "{{ extdomain.split(',') }}"
+
+  - name: Copy files in /etc/named
+    copy:
+        src: "etc/{{ item }}"
+        dest: "/var/named/chroot/etc/named"
+        owner: root
+        group: named
+        mode: 0640
+    with_items:
+      - "named.rfc1912.zones"
+      - "0.external"
+
+  - name: Copy the other files in /var/named
+    copy:
+        src: "{{ item }}"
+        dest: "/var/named/chroot/var/named"
+        owner: root
+        group: named
+        mode: 0640
+    with_fileglob:
+      - "var/named/*"
+
+  - lineinfile:
+        dest: "/var/named/chroot/etc/named.conf"
+        insertafter: "// INTERNAL PRIMARY"
+        line: "       include \"/etc/named/{{ item }}.internal\";"
+    with_items: "{{ intdomain.split(',') }}"
+
+  - lineinfile:
+        dest: "/var/named/chroot/etc/named.conf"
+        insertafter: "// EXTERNAL PRIMARY"
+        line: "       include \"/etc/named/{{ item }}.external\";"
+    with_items: "{{ extdomain.split(',') }}"
+
+  - name: Start and enable named-chroot
+    service: name=named-chroot state=started enabled=yes
+
+  - name: reload rndc
+    shell: rndc freeze && rndc reload && rndc thaw
+

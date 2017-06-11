@@ -1,6 +1,6 @@
 # Digital Ocean environment for Sandesnet LLC
 
-Building a set of docker servers on Digital Ocean to function as a back up for the Sandesnet LLC services.
+Building a set of servers on Digital Ocean to function as a back up for the Sandesnet LLC services.
 
 The set is consisting of the following types of docker containers:
 
