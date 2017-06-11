@@ -42,7 +42,7 @@ sleep 60
  for HOST in `ansible all -i inventory --list | grep $REGDOMAIN` ; do
    sed -i "/^$HOST/d" $HOME/.ssh/known_hosts
  done
- ansible-playbook namedconf.yml -i inventory --ssh-common-args="-o StrictHostKeyChecking=false" -e intdomain=$INTDOMAINS -e extdomain=0,$EXTDOMAINS -u root
+ ansible-playbook namedconf.yml -i inventory --ssh-common-args="-o StrictHostKeyChecking=false" -e intdomain=$INTDOMAINS -e extdomain=$EXTDOMAINS -u root
 )
 
 exit 0
