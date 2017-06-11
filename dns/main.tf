@@ -36,19 +36,10 @@ resource "digitalocean_droplet" "dnsserver" {
     ]
   }
 
-  provisioner "local-exec" {
-    command = "tar zcf digitalocean.tar.gz files"
-  }
-
-  provisioner "file" {
-    source      = "digitalocean.tar.gz"
-    destination = "/tmp/digitalocean.tar.gz"
-  }
-
   provisioner "remote-exec" {
     inline = [
       "cd /root",
-      "tar zxf /tmp/digitalocean.tar.gz",
+      "mkdir files",
       "wget https://releases.hashicorp.com/consul/0.8.1/consul_0.8.1_linux_amd64.zip -O files/consul.zip",
       "cd /usr/local/bin",
       "unzip /root/files/consul.zip",
